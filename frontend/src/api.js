@@ -2,7 +2,8 @@
 // NexusBank — API Client with JWT Interceptor
 // =============================================
 
-const BASE_URL = 'http://localhost:8080';
+// Use environment variable if deployed, otherwise fallback to local backend
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 function getToken() {
   return localStorage.getItem('nexus_token');
