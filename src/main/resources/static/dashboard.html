@@ -174,7 +174,7 @@
                 if (action === 'transfer') {
                     const receiverAccountNumber = document.getElementById('receiverAccountNumber').value;
                     res = await API.post('/transactions/transfer', {
-                        senderId: currentUserId,
+                        senderId: currentAccountId,
                         receiverAccountNumber: receiverAccountNumber,
                         amount: amount
                     });
