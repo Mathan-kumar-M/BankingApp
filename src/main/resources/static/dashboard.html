@@ -24,10 +24,11 @@
             <div class="card">
                 <h3 class="card-title">My Account</h3>
                 <div style="font-size: 2rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">
-                    $ <span id="accountBalance">0.00</span>
+                    ₹ <span id="accountBalance">0.00</span>
                 </div>
                 <div style="color: var(--text-muted); font-size: 0.9rem;">
-                    Account ID: <span id="accountId">--</span>
+                    Account ID: <span id="accountId">--</span><br>
+                    Account No: <span id="accountNumber">--</span>
                 </div>
             </div>
 
@@ -45,7 +46,7 @@
                     </div>
                     
                     <div class="input-group">
-                        <label for="amount">Amount ($)</label>
+                        <label for="amount">Amount (₹)</label>
                         <input type="number" id="amount" step="0.01" min="0.01" required placeholder="0.00">
                     </div>
 
@@ -112,6 +113,7 @@
                     currentAccountId = account.id;
                     document.getElementById('accountBalance').innerText = parseFloat(account.balance).toFixed(2);
                     document.getElementById('accountId').innerText = account.id;
+                    document.getElementById('accountNumber').innerText = account.accountNumber || '--';
                 }
             } catch(e) {
                 showToast("Failed to load profile. Maybe no account setup yet?", true);
@@ -135,7 +137,7 @@
                     const html = `
                         <tr>
                             <td><span class="badge ${typeClass}">${t.type || 'Unknown'}</span></td>
-                            <td style="font-weight:600;">$${t.amount}</td>
+                            <td style="font-weight:600;">₹${t.amount}</td>
                             <td>${t.description || '-'}</td>
                         </tr>
                     `;
