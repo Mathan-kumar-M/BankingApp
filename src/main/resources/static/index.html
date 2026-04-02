@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banking System - Login & Register</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <div class="auth-container">
+        
+        <!-- Login Form -->
+        <div class="auth-card" id="loginCard">
+            <h2>Welcome Back</h2>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" required placeholder="you@example.com">
+                </div>
+                <div class="input-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn">Sign In</button>
+            </form>
+            <div class="toggle-text">
+                Don't have an account? <span onclick="toggleAuth()">Register now</span>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div class="auth-card hidden" id="registerCard">
+            <h2>Create Account</h2>
+            <form id="registerForm">
+                <div class="input-group">
+                    <label for="regName">Full Name</label>
+                    <input type="text" id="regName" required placeholder="John Doe">
+                </div>
+                <div class="input-group">
+                    <label for="regEmail">Email Address</label>
+                    <input type="email" id="regEmail" required placeholder="you@example.com">
+                </div>
+                <div class="input-group">
+                    <label for="regPassword">Password</label>
+                    <input type="password" id="regPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn">Sign Up</button>
+            </form>
+            <div class="toggle-text">
+                Already have an account? <span onclick="toggleAuth()">Sign In</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="/js/app.js"></script>
+    <script>
+        function toggleAuth() {
+            document.getElementById('loginCard').classList.toggle('hidden');
+            document.getElementById('registerCard').classList.toggle('hidden');
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                const res = await API.post('/api/auth/login', { email, password }, false);
+                
+                // Spring returns token directly as string, not a JSON object
+                if (res && res.length > 20) {
+                    API.setToken(res);
+                    showToast('Login successful!');
+                    
+                    // Route to correct dashboard based on simple logic (or call profile)
+                    // If email has 'admin', for demo we will route to admin. Actually, we should check profile.
+                    window.location.href = '/dashboard.html';
+                } else {
+                    showToast('Invalid credentials or user pending approval.', true);
+                }
+            } catch (error) {
+                showToast('Login failed: ' + error.message, true);
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            
+            try {
+                const res = await API.post('/api/auth/register', { name, email, password }, false);
+                showToast(res.message || 'Registration successful! Wait for admin approval.');
+                toggleAuth(); // Go back to login
+            } catch (error) {
+                showToast('Registration failed.', true);
+            }
+        });
+    </script>
+</body>
+</html>
